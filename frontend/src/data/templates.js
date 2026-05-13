@@ -17,7 +17,7 @@ export const templates = [
     title: "Anniversary",
     image: img2,
     premium: true,
-    category: "Love",
+    category: "Anniversary",
   },
   {
     id: 3,
@@ -38,6 +38,6 @@ export const templates = [
     title: "Special",
     image: img5,
     premium: false,
-    category: "Special",
+    category: "Anniversary",
   },
 ];

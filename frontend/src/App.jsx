@@ -16,7 +16,11 @@ function App() {
 
   const [showPremiumModal, setShowPremiumModal] = useState(false);
 
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   const cardRef = useRef();
+
+  const categories = ["All", "Birthday", "Anniversary", "Festival"];
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -33,6 +37,11 @@ function App() {
       setSelectedTemplate(template);
     }
   };
+
+  const filteredTemplates =
+    selectedCategory === "All"
+      ? templates
+      : templates.filter((template) => template.category === selectedCategory);
 
   const downloadCard = async () => {
     const canvas = await html2canvas(cardRef.current);
@@ -100,8 +109,32 @@ function App() {
                 />
               </div>
 
+              <div className="flex flex-wrap gap-3 mt-6 mb-5">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`
+                      px-5
+                      py-2
+                      rounded-full
+                      font-medium
+                      transition
+
+                      ${
+                        selectedCategory === category
+                          ? "bg-black text-white"
+                          : "bg-gray-200 text-black"
+                      }
+                    `}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+
               <div className="grid grid-cols-3 gap-4 mt-6">
-                {templates.map((template) => (
+                {filteredTemplates.map((template) => (
                   <img
                     key={template.id}
                     src={template.image}
