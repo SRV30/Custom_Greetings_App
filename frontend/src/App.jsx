@@ -22,13 +22,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 p-10">
-      <div className="max-w-7xl mx-auto flex gap-10 items-start">
-        <div className="w-[350px] bg-white p-6 rounded-3xl shadow-xl">
-          <h2 className="text-2xl font-bold mb-6">Customize Card</h2>
+    <div className="min-h-screen bg-gray-200 px-4 py-6 md:p-10">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10 lg:gap-20 items-center lg:items-start">
+        <div className="w-full max-w-150 bg-white p-5 md:p-10 rounded-3xl shadow-xl">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Customize Card
+          </h2>
 
           <div className="mb-5">
-            <label className="block mb-2 font-medium">Your Name</label>
+            <label className="block mb-2 font-medium text-lg md:text-2xl">
+              Your Name
+            </label>
 
             <input
               type="text"
@@ -39,7 +43,9 @@ function App() {
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 font-medium">Greeting Message</label>
+            <label className="block mb-2 font-medium text-lg md:text-2xl">
+              Greeting Message
+            </label>
 
             <textarea
               value={message}
@@ -50,7 +56,9 @@ function App() {
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 font-medium">Bottom Quote</label>
+            <label className="block mb-2 font-medium text-lg md:text-2xl">
+              Bottom Quote
+            </label>
 
             <textarea
               value={quote}
@@ -60,8 +68,34 @@ function App() {
             />
           </div>
 
-          <div>
-            <label className="block mb-2 font-medium">
+          <div className="grid grid-cols-3 gap-4 mt-6">
+            {templates.map((template) => (
+              <img
+                key={template.id}
+                src={template.image}
+                alt=""
+                onClick={() => setSelectedTemplate(template)}
+                className={`
+                  aspect-4/5
+                  w-full
+                  object-fit
+                  rounded-2xl
+                  cursor-pointer
+                  border-4
+                  transition
+
+                  ${
+                    selectedTemplate.id === template.id
+                      ? "border-black scale-105"
+                      : "border-transparent"
+                  }
+                `}
+              />
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <label className="block mb-2 font-medium text-lg md:text-2xl">
               Upload Profile Image
             </label>
 
@@ -74,13 +108,15 @@ function App() {
           </div>
         </div>
 
-        <GreetingCard
-          template={selectedTemplate}
-          userName={userName}
-          profileImage={profileImage}
-          message={message}
-          quote={quote}
-        />
+        <div className="w-full flex justify-center overflow-x-auto">
+          <GreetingCard
+            template={selectedTemplate}
+            userName={userName}
+            profileImage={profileImage}
+            message={message}
+            quote={quote}
+          />
+        </div>
       </div>
     </div>
   );

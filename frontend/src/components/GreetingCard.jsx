@@ -1,10 +1,10 @@
 const GreetingCard = ({ template, userName, profileImage, message, quote }) => {
   return (
-    <div className="relative w-85 h-140 overflow-hidden rounded-4xl shadow-2xl bg-white">
+    <div className="relative w-385 h-140 overflow-hidden rounded-4xl shadow-2xl bg-white">
       <img
         src={template.image}
         alt={template.title}
-        className="w-full h-full object-cover scale-105"
+        className="w-full h-full object-fit scale-105"
       />
 
       <div className="absolute inset-0 bg-linear-to-b from-black/25 via-transparent to-black/70"></div>
