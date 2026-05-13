@@ -78,6 +78,35 @@ function App() {
     link.click();
   };
 
+  const shareCard = async () => {
+    try {
+      const canvas = await html2canvas(cardRef.current);
+
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], "greeting-card.png", {
+          type: "image/png",
+        });
+
+        if (
+          navigator.share &&
+          navigator.canShare({
+            files: [file],
+          })
+        ) {
+          await navigator.share({
+            title: "Greeting Card",
+            text: "Check out my greeting card",
+            files: [file],
+          });
+        } else {
+          alert("Sharing is not supported on this device");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!isLoggedIn) {
     return <AuthPage setIsLoggedIn={setIsLoggedIn} />;
   }
@@ -166,18 +195,18 @@ function App() {
                     key={category}
                     onClick={() => setSelectedCategory(category)}
                     className={`
-                        px-5
-                        py-2
-                        rounded-full
-                        font-medium
-                        transition
+                      px-5
+                      py-2
+                      rounded-full
+                      font-medium
+                      transition
 
-                        ${
-                          selectedCategory === category
-                            ? "bg-black text-white"
-                            : "bg-gray-200 text-black"
-                        }
-                      `}
+                      ${
+                        selectedCategory === category
+                          ? "bg-black text-white"
+                          : "bg-gray-200 text-black"
+                      }
+                    `}
                   >
                     {category}
                   </button>
@@ -192,41 +221,58 @@ function App() {
                     alt=""
                     onClick={() => handleTemplateSelect(template)}
                     className={`
-                        aspect-4/5
-                        w-full
-                        object-cover
-                        rounded-2xl
-                        cursor-pointer
-                        border-4
-                        transition
+                      aspect-4/5
+                      w-full
+                      object-cover
+                      rounded-2xl
+                      cursor-pointer
+                      border-4
+                      transition
 
-                        ${
-                          selectedTemplate.id === template.id
-                            ? "border-black scale-105"
-                            : "border-transparent"
-                        }
-                      `}
+                      ${
+                        selectedTemplate.id === template.id
+                          ? "border-black scale-105"
+                          : "border-transparent"
+                      }
+                    `}
                   />
                 ))}
               </div>
 
-              <button
-                onClick={downloadCard}
-                className="
-                  w-full
-                  mt-8
-                  bg-black
-                  text-white
-                  py-4
-                  rounded-2xl
-                  text-lg
-                  font-semibold
-                  transition
-                  hover:bg-gray-800
-                "
-              >
-                Download Card
-              </button>
+              <div className="grid grid-cols-2 gap-4 mt-8">
+                <button
+                  onClick={downloadCard}
+                  className="
+                    bg-black
+                    text-white
+                    py-4
+                    rounded-2xl
+                    text-lg
+                    font-semibold
+                    transition
+                    hover:bg-gray-800
+                  "
+                >
+                  Download
+                </button>
+
+                <button
+                  onClick={shareCard}
+                  className="
+                    border
+                    border-black
+                    py-4
+                    rounded-2xl
+                    text-lg
+                    font-semibold
+                    transition
+                    hover:bg-black
+                    hover:text-white
+                  "
+                >
+                  Share
+                </button>
+              </div>
             </div>
           </div>
 
