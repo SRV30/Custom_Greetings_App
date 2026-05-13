@@ -1,16 +1,23 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import html2canvas from "html2canvas";
+
 import GreetingCard from "./components/GreetingCard";
+
+import AuthPage from "./pages/AuthPage";
+
 import { templates } from "./data/templates";
 
 function App() {
-  const [userName, setUserName] = useState("Sahil");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [userName, setUserName] = useState("");
 
   const [message, setMessage] = useState("Happy Anniversary");
 
   const [quote, setQuote] = useState("Wishing you happiness, love and success");
 
-  const [profileImage, setProfileImage] = useState("https://i.pravatar.cc/300");
+  const [profileImage, setProfileImage] = useState("");
 
   const [selectedTemplate, setSelectedTemplate] = useState(templates[0]);
 
@@ -22,12 +29,26 @@ function App() {
 
   const categories = ["All", "Birthday", "Anniversary", "Festival"];
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-    if (file) {
-      setProfileImage(URL.createObjectURL(file));
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (token && user) {
+      setIsLoggedIn(true);
+
+      setUserName(user.name);
+
+      setProfileImage(`${import.meta.env.VITE_API_URL}${user.profileImage}`);
     }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("user");
+
+    setIsLoggedIn(false);
   };
 
   const handleTemplateSelect = (template) => {
@@ -57,12 +78,42 @@ function App() {
     link.click();
   };
 
+  if (!isLoggedIn) {
+    return <AuthPage setIsLoggedIn={setIsLoggedIn} />;
+  }
+
   return (
     <div
       className="min-h-screen px-4 py-6 md:p-10"
-      style={{ backgroundColor: "#e5e7eb" }}
+      style={{
+        backgroundColor: "#e5e7eb",
+      }}
     >
       <div className="max-w-400 mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold">Greetings App</h1>
+
+            <p className="text-gray-600 mt-1">
+              Create personalized greeting cards
+            </p>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="
+              bg-black
+              text-white
+              px-6
+              py-3
+              rounded-2xl
+              font-semibold
+            "
+          >
+            Logout
+          </button>
+        </div>
+
         <div className="flex flex-col xl:flex-row gap-8 xl:gap-14 items-start justify-center">
           <div className="w-full max-w-130 lg:sticky lg:top-10">
             <div className="bg-white rounded-4xl shadow-2xl p-5 md:p-10">
@@ -115,18 +166,18 @@ function App() {
                     key={category}
                     onClick={() => setSelectedCategory(category)}
                     className={`
-                      px-5
-                      py-2
-                      rounded-full
-                      font-medium
-                      transition
+                        px-5
+                        py-2
+                        rounded-full
+                        font-medium
+                        transition
 
-                      ${
-                        selectedCategory === category
-                          ? "bg-black text-white"
-                          : "bg-gray-200 text-black"
-                      }
-                    `}
+                        ${
+                          selectedCategory === category
+                            ? "bg-black text-white"
+                            : "bg-gray-200 text-black"
+                        }
+                      `}
                   >
                     {category}
                   </button>
@@ -141,35 +192,22 @@ function App() {
                     alt=""
                     onClick={() => handleTemplateSelect(template)}
                     className={`
-                      aspect-4/5
-                      w-full
-                      object-cover
-                      rounded-2xl
-                      cursor-pointer
-                      border-4
-                      transition
+                        aspect-4/5
+                        w-full
+                        object-cover
+                        rounded-2xl
+                        cursor-pointer
+                        border-4
+                        transition
 
-                      ${
-                        selectedTemplate.id === template.id
-                          ? "border-black scale-105"
-                          : "border-transparent"
-                      }
-                    `}
+                        ${
+                          selectedTemplate.id === template.id
+                            ? "border-black scale-105"
+                            : "border-transparent"
+                        }
+                      `}
                   />
                 ))}
-              </div>
-
-              <div className="mt-6">
-                <label className="block mb-2 font-medium text-lg md:text-2xl">
-                  Upload Profile Image
-                </label>
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="w-full"
-                />
               </div>
 
               <button
@@ -224,7 +262,9 @@ function App() {
       {showPremiumModal && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50 px-4"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          style={{
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
         >
           <div className="bg-white w-full max-w-100 rounded-3xl p-8 shadow-2xl text-center">
             <h2 className="text-3xl font-bold mb-3">Premium Template</h2>
