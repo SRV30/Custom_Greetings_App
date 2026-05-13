@@ -13,11 +13,21 @@ function App() {
 
   const [selectedTemplate, setSelectedTemplate] = useState(templates[0]);
 
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
 
     if (file) {
       setProfileImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleTemplateSelect = (template) => {
+    if (template.premium) {
+      setShowPremiumModal(true);
+    } else {
+      setSelectedTemplate(template);
     }
   };
 
@@ -74,7 +84,7 @@ function App() {
                 key={template.id}
                 src={template.image}
                 alt=""
-                onClick={() => setSelectedTemplate(template)}
+                onClick={() => handleTemplateSelect(template)}
                 className={`
                   aspect-4/5
                   w-full
@@ -118,6 +128,31 @@ function App() {
           />
         </div>
       </div>
+
+      {showPremiumModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white w-full max-w-100 rounded-3xl p-8 shadow-2xl text-center">
+            <h2 className="text-3xl font-bold mb-3">Premium Template</h2>
+
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              This template is available for premium users only.
+            </p>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setShowPremiumModal(false)}
+                className="flex-1 py-3 rounded-2xl border border-gray-300 font-medium"
+              >
+                Cancel
+              </button>
+
+              <button className="flex-1 py-3 rounded-2xl bg-black text-white font-medium">
+                Upgrade
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
