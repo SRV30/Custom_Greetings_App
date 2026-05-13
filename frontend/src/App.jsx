@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import html2canvas from "html2canvas";
 import GreetingCard from "./components/GreetingCard";
 import { templates } from "./data/templates";
 
@@ -15,6 +16,8 @@ function App() {
 
   const [showPremiumModal, setShowPremiumModal] = useState(false);
 
+  const cardRef = useRef();
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
 
@@ -29,6 +32,20 @@ function App() {
     } else {
       setSelectedTemplate(template);
     }
+  };
+
+  const downloadCard = async () => {
+    const canvas = await html2canvas(cardRef.current);
+
+    const image = canvas.toDataURL("image/png");
+
+    const link = document.createElement("a");
+
+    link.href = image;
+
+    link.download = "greeting-card.png";
+
+    link.click();
   };
 
   return (
@@ -88,7 +105,7 @@ function App() {
                 className={`
                   aspect-4/5
                   w-full
-                  object-fit
+                  object-cover
                   rounded-2xl
                   cursor-pointer
                   border-4
@@ -116,16 +133,44 @@ function App() {
               className="w-full"
             />
           </div>
+
+          <button
+            onClick={downloadCard}
+            className="
+              w-full
+              mt-8
+              bg-black
+              text-white
+              py-4
+              rounded-2xl
+              text-lg
+              font-semibold
+              transition
+              hover:bg-gray-800
+            "
+          >
+            Download Card
+          </button>
         </div>
 
-        <div className="w-full flex justify-center overflow-x-auto">
-          <GreetingCard
-            template={selectedTemplate}
-            userName={userName}
-            profileImage={profileImage}
-            message={message}
-            quote={quote}
-          />
+        <div className="w-full flex justify-center">
+          <div
+            ref={cardRef}
+            className="
+              scale-[0.75]
+              sm:scale-[0.85]
+              md:scale-100
+              origin-top
+            "
+          >
+            <GreetingCard
+              template={selectedTemplate}
+              userName={userName}
+              profileImage={profileImage}
+              message={message}
+              quote={quote}
+            />
+          </div>
         </div>
       </div>
 
