@@ -41,6 +41,9 @@ The project includes authentication, image upload, premium templates, live previ
 - Multer
 - bcryptjs
 
+### Video Link
+https://drive.google.com/file/d/1sr2ut_UfEwg-N6P64F2yi8dYjlqMkpYa/view?usp=sharing
+
 ---
 
 ## Folder Structure
